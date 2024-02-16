@@ -15,7 +15,7 @@ public class WorldPalEditor extends JPanel {
         //setLayout(null);
         status = new JLabel("Awaiting attemp.");
         add(status);
-        read_file("E:\\Programming\\PalServerTool\\PalWorldSettings.ini");
+        read_file(System.getProperty("user.dir") + "/PalServerTool/PalWorldSettings.ini");
     }
 
     // Reads the contents of the ini file.
