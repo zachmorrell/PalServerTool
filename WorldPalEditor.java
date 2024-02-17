@@ -14,56 +14,77 @@ import java.awt.Component;
 import java.awt.GridLayout;
 
 public class WorldPalEditor extends JPanel {
+
     private JLabel[] labels = new JLabel[64];
     private Component[] values = new Component[64];
+    private JPanel settings_panel;
+
+    private final String DIRECTORY = System.getProperty("user.dir");
+    private final String FILE_NAME = "/PalWorldSettings.ini";
     
-    private Map<String, String> file_data;
     public WorldPalEditor() {
+        // Creates and sets the panel.
+        set_panel_layout();
         // Sets the read location to the current directory + ini file name.
-        read_file(System.getProperty("user.dir") + "/PalWorldSettings.ini");
+        Map<String, String> file_data = read_file(DIRECTORY + FILE_NAME);
+        // Populates the panel based on the loaded data.
+        populate_panel(file_data);
+    }
+
+    // Creates and sets the layout of the panel.
+    private void set_panel_layout() {
+        settings_panel = new JPanel(new GridLayout(0, 2));
+
+        JScrollPane scrollPane = new JScrollPane(settings_panel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        setLayout(new GridLayout());
+        add(scrollPane);
+
     }
 
     // Reads the contents of the ini file.
-    private void read_file(String file) {
-        JPanel world_panel = new JPanel(new GridLayout(0, 2));
-    
+    private Map<String, String> read_file(String file) {    
         FileReader fileReader = new FileReader(file);
+        return new LinkedHashMap<>(fileReader.read_file_lines());    
+    }
+
+    // Populates the panel with it's requried swing components.
+    private void populate_panel(Map<String, String> file_data) {
         try {
-            file_data = new LinkedHashMap<>(fileReader.read_file_lines());
+            // Index tracking to ease development.
             int index = 0;
+
+            // Loop through hashmap of data.
             for (Map.Entry<String, String> entry : file_data.entrySet()) {
-                data_to_gui(index, entry);
+
+                // Console print of data loaded from ini file.
+                System.out.println(index + ": " + entry.getKey() + ": " + entry.getValue());
+
+                // Adds the label or key setting to a label array to display on the GUI.
                 labels[index] = new JLabel(entry.getKey());
+
+                // Checks the data type to either assign a checkbox or textfield.
                 if(isBoolean(entry.getValue())) {
                     values[index] = new JCheckBox("", Boolean.parseBoolean(entry.getValue()));
                 } else {
                     values[index] = new JTextField(entry.getValue());
                 }
-                world_panel.add(labels[index]);
-                world_panel.add(values[index]);
+
+                // Adds the labels and values arrays to the settings panel.
+                settings_panel.add(labels[index]);
+                settings_panel.add(values[index]);
+                // Increments the index by 1.
                 index++;
             }
         } catch (Exception e) {
             System.out.println(e);
         }
-    
-        JScrollPane scrollPane = new JScrollPane(world_panel);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        setLayout(new GridLayout());
-        add(scrollPane);
     }
 
+    // Returns true if a message contains either true or false, else false.
     private Boolean isBoolean(String msg) {
         return (msg.contains("True") || msg.contains("False")) ? true: false;
-    }
-
-    private void data_to_gui(int index, Map.Entry<String, String> entrySet) {
-        switch (index) {
-        
-            default:
-                System.out.println(index + ": " + entrySet.getKey() + ": " + entrySet.getValue());
-                break;
-        }
     }
 }
