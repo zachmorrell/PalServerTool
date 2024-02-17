@@ -22,6 +22,7 @@ public class WorldPalEditor extends JPanel {
     private final String DIRECTORY = System.getProperty("user.dir");
     private final String FILE_NAME = "/PalWorldSettings.ini";
     
+    // Controls the order of application operation.
     public WorldPalEditor() {
         // Creates and sets the panel.
         set_panel_layout();
