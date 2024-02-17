@@ -10,7 +10,7 @@ public class Main {
         // End program and process when closed.
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // Change the size of the JFrame.
-        window.setPreferredSize(new Dimension(350,450));
+        window.setPreferredSize(new Dimension(550,550));
 
         // Add the pane to the JFrame.
         window.getContentPane().add(new WorldPalEditor());
