@@ -9,6 +9,7 @@ public class FileReader {
     public FileReader(String file_path) {
         this.file = new File(file_path);
     }
+    
     // Reads a File and Stores it's content into a HasMap.
     public Map<String, String> read_file_lines() {
         Map<String, String> lines = new LinkedHashMap<String, String>();

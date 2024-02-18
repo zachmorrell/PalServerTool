@@ -20,6 +20,8 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static javax.swing.JOptionPane.showMessageDialog;
+
 public class WorldPalEditor extends JPanel {
 
     private JPanel settings_panel = new JPanel();
@@ -29,8 +31,8 @@ public class WorldPalEditor extends JPanel {
 
     int grid_row = 0;
 
-    private final String DIRECTORY = System.getProperty("user.dir");
-    private final String FILE_NAME = "/PalWorldSettings.ini";
+    private final String DIRECTORY = System.getProperty("user.dir")+"\\";
+    private final String FILE_NAME = "PalWorldSettings.ini";
 
     GridBagConstraints gbc = new GridBagConstraints();
     JScrollPane scrollPane;
@@ -121,9 +123,8 @@ public class WorldPalEditor extends JPanel {
             // apply Grid Bag Layout and add to the panel.
             apply_gbc(save, 0, grid_row, 2);
             // Initialize the buttonlistener for the save button.
-            ButtonListener buttonListener = new ButtonListener();
             // Add buttonlistener to the save button.
-            save.addActionListener(buttonListener);
+            save.addActionListener(new ButtonListener(DIRECTORY + FILE_NAME, labels, values));
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -137,9 +138,30 @@ public class WorldPalEditor extends JPanel {
 }
 
 class ButtonListener implements ActionListener {
+    String file_path = "";
+    JLabel[] keys = new JLabel[64];
+    Component[] values = new Component[64];
+
+    public ButtonListener(String file_path, JLabel[] keys, Component[] values) {
+        this.file_path = file_path;
+        this.keys = keys;
+        this.values = values;
+    }
+
     public void actionPerformed(ActionEvent event) {
         try {                
             System.out.println("button clicked");
+
+            // Backup ini file.
+            BackupFile backupFile = new BackupFile(file_path);
+            backupFile.backup_file();
+            
+            // Write new ini file.
+            IniFileWriter fileWriter = new IniFileWriter(file_path, keys, values);
+            fileWriter.write_to_file();
+
+            // All Operations complete, close the program.
+            showMessageDialog(null, "Ini file backed up and overwritten successfully.");
             System.exit(0);
         } catch (Exception e) {
             System.out.println(e);
