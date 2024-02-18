@@ -118,8 +118,11 @@ public class WorldPalEditor extends JPanel {
             }
             // Add the save button.
             save = new Button("Save");
+            // apply Grid Bag Layout and add to the panel.
             apply_gbc(save, 0, grid_row, 2);
+            // Initialize the buttonlistener for the save button.
             ButtonListener buttonListener = new ButtonListener();
+            // Add buttonlistener to the save button.
             save.addActionListener(buttonListener);
         } catch (Exception e) {
             System.out.println(e);
@@ -132,6 +135,7 @@ public class WorldPalEditor extends JPanel {
         return (msg.contains("True") || msg.contains("False")) ? true: false;
     }
 }
+
 class ButtonListener implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         try {                
